@@ -2,11 +2,17 @@ import { useEffect, useState } from 'react';
 
 export default function App() {
   const [taskText, setTaskText] = useState('');
+  const [taskPriority, setTaskPriority] = useState('5');
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const sortTasks = (list) => [...list].sort((a, b) => b.id - a.id);
+  const sortTasks = (list) => [...list].sort((a, b) => {
+    if (b.priority !== a.priority) {
+      return b.priority - a.priority;
+    }
+    return b.id - a.id;
+  });
 
   useEffect(() => {
     loadTasks();
@@ -43,7 +49,7 @@ export default function App() {
       const response = await fetch('/api/tasks', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: trimmedText })
+        body: JSON.stringify({ text: trimmedText, priority: Number(taskPriority) })
       });
 
       if (!response.ok) {
@@ -53,6 +59,7 @@ export default function App() {
       const data = await response.json();
       setTasks((previous) => sortTasks([...previous, data.task]));
       setTaskText('');
+      setTaskPriority('5');
     } catch (err) {
       setError('Something went wrong while saving this task.');
     } finally {
@@ -78,6 +85,23 @@ export default function App() {
               onChange={(event) => setTaskText(event.target.value)}
               placeholder="Buy milk, plan presentation, etc."
             />
+            <label htmlFor="task-priority" className="priority-label">
+              Priority (1 = lowest, 10 = highest)
+            </label>
+            <select
+              id="task-priority"
+              value={taskPriority}
+              onChange={(event) => setTaskPriority(event.target.value)}
+            >
+              {[...Array(10)].map((_, index) => {
+                const value = String(index + 1);
+                return (
+                  <option key={value} value={value}>
+                    {value}
+                  </option>
+                );
+              })}
+            </select>
             <button type="submit" disabled={loading}>
               {loading ? 'Saving...' : 'Add Task'}
             </button>
@@ -98,6 +122,7 @@ export default function App() {
                 <li key={task.id}>
                   <div className="task-row">
                     <span>{task.text}</span>
+                    <span className="task-priority">Priority {task.priority ?? 5}</span>
                   </div>
                 </li>
               ))}

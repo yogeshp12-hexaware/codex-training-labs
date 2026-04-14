@@ -22,8 +22,8 @@ This lab replaces the previous intro prompt UI with a lightweight todo list expe
 Once both servers are running, open the frontend URL, type a task into the box, then click "Add Task" to see it appear at the top of the list.
 
 ## API surface overview
-- `GET /api/tasks` - returns `{ tasks: [{ id, text }] }` sorted so newer items appear before older ones.
-- `POST /api/tasks` - accepts `{ text: string }`, rejects empty `text` submissions with a 400 error, and replies with `{ task: { id, text } }`.
+- `GET /api/tasks` - returns `{ tasks: [{ id, text, priority }] }` sorted with highest priority first and newer items first within the same priority.
+- `POST /api/tasks` - accepts `{ text: string, priority: number }` where `priority` is between `1` and `10` (`10` is highest, `1` is lowest), rejects empty `text` submissions with a 400 error, and replies with `{ task: { id, text, priority } }`.
 
 ## Notes
 - Tasks live only in memory. Stopping the backend clears the saved list.
