@@ -1,0 +1,18 @@
+Bad prompt:
+"Write some code to process a list."
+
+Improved example:
+"Write a Python function `filter_and_sum(numbers, threshold)` that filters values greater than or equal to `threshold`, sums them, and returns the result. Show an example call."
+
+Example response:
+
+```python
+def filter_and_sum(numbers, threshold):
+    filtered_numbers = [number for number in numbers if number >= threshold]
+    return sum(filtered_numbers)
+
+
+values = [3, 7, 10, 2, 8]
+result = filter_and_sum(values, 7)
+print(result)  # 25
+```
