@@ -3,7 +3,7 @@ const cors = require("cors");
 
 const app = express();
 app.use(cors());
-// Missing express.json() so req.body will be undefined and destructuring errors out
+app.use(express.json());
 
 const users = {
   learner: "pass123",
@@ -26,5 +26,5 @@ app.post("/login", (req, res) => {
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(Auth backend (incorrect) listening on port );
+  console.log(`Auth backend listening on port ${PORT}`);
 });
